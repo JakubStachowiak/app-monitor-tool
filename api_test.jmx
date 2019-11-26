@@ -230,7 +230,7 @@ log.info(props.USERS_CSV.inspect())</stringProp>
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <GenericController guiclass="LogicControllerGui" testclass="GenericController" testname="Once Only Controller - authorized user" enabled="true"/>
+        <OnceOnlyController guiclass="OnceOnlyControllerGui" testclass="OnceOnlyController" testname="Once Only Controller - authorized user" enabled="true"/>
         <hashTree>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager - authorized" enabled="true">
             <collectionProp name="HeaderManager.headers">

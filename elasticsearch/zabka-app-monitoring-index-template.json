@@ -1,0 +1,208 @@
+{
+    "index_patterns": ["zabka-app-monitor-*"],
+    "order": 0,
+    "mappings": {
+        "properties": {
+            "AllThreads": {
+                "type": "long"
+            },
+            "AssertionResults": {
+                "properties": {
+                    "failure": {
+                        "type": "boolean"
+                    },
+                    "failureMessage": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            },
+            "BodySize": {
+                "type": "long"
+            },
+            "Bytes": {
+                "type": "long"
+            },
+            "ConnectTime": {
+                "type": "long"
+            },
+            "ContentType": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "DataType": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "ElapsedTime": {
+                "type": "long"
+            },
+            "ErrorCount": {
+                "type": "long"
+            },
+            "FailureMessage": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "GrpThreads": {
+                "type": "long"
+            },
+            "IdleTime": {
+                "type": "long"
+            },
+            "InjectorHostname": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "Latency": {
+                "type": "long"
+            },
+            "RequestBody": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "RequestHeaders": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "ResponseBody": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "ResponseCode": {
+                "type": "long"
+            },
+            "ResponseHeaders": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "ResponseMessage": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "ResponseTime": {
+                "type": "long"
+            },
+            "SampleCount": {
+                "type": "long"
+            },
+            "SampleEndTime": {
+                "type": "date"
+            },
+            "SampleLabel": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "SampleStartTime": {
+                "type": "date"
+            },
+            "SentBytes": {
+                "type": "long"
+            },
+            "Success": {
+                "type": "boolean"
+            },
+            "TestElement": {
+                "properties": {
+                    "name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    }
+                }
+            },
+            "TestStartTime": {
+                "type": "long"
+            },
+            "ThreadName": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            },
+            "Timestamp": {
+                "type": "long"
+            },
+            "URL": {
+                "type": "text",
+                "fields": {
+                    "keyword": {
+                        "type": "keyword",
+                        "ignore_above": 256
+                    }
+                }
+            }
+        }
+    }
+}

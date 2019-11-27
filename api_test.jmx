@@ -394,89 +394,70 @@ vars.put(&quot;user_password&quot;, vars.getObject(&quot;user&quot;).password)</
             </JSR223PreProcessor>
             <hashTree/>
           </hashTree>
-          <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller - document points" enabled="true">
-            <stringProp name="WhileController.condition">${points_loop}</stringProp>
-          </WhileController>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="DC" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="TestPlan.comments">Document points loop</stringProp>
+            <stringProp name="LoopController.loops">10</stringProp>
+          </LoopController>
           <hashTree>
             <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="points_loop" elementType="Argument">
-                  <stringProp name="Argument.name">points_loop</stringProp>
-                  <stringProp name="Argument.value">true</stringProp>
+                <elementProp name="points" elementType="Argument">
+                  <stringProp name="Argument.name">points</stringProp>
+                  <stringProp name="Argument.value">0</stringProp>
                   <stringProp name="Argument.desc">Variable determines if user reaches to the minimum points limit</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-                <elementProp name="max_loops" elementType="Argument">
-                  <stringProp name="Argument.name">max_loops</stringProp>
-                  <stringProp name="Argument.value">10</stringProp>
-                  <stringProp name="Argument.desc">Variable determines how many loops can be made until assertion will be treated as failure</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
               </collectionProp>
             </Arguments>
-            <hashTree/>
-            <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
-              <stringProp name="CounterConfig.start">1</stringProp>
-              <stringProp name="CounterConfig.end">10</stringProp>
-              <stringProp name="CounterConfig.incr">1</stringProp>
-              <stringProp name="CounterConfig.name">current_loop_number</stringProp>
-              <stringProp name="CounterConfig.format"></stringProp>
-              <boolProp name="CounterConfig.per_user">true</boolProp>
-              <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
-            </CounterConfig>
             <hashTree/>
             <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer - delay each request" enabled="true">
               <stringProp name="TestPlan.comments">Delay each request to gain time to recalculate points</stringProp>
               <stringProp name="ConstantTimer.delay">500</stringProp>
             </ConstantTimer>
             <hashTree/>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - points ${current_loop_number}" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/schema-service/document/slug/points</stringProp>
-              <stringProp name="HTTPSampler.method">GET</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+              <stringProp name="IfController.condition">${__groovy(vars.get(&quot;points&quot;).toInteger() &lt; 150)}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+              <boolProp name="IfController.useExpression">true</boolProp>
+            </IfController>
             <hashTree>
-              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - points value" enabled="true">
-                <stringProp name="JSONPostProcessor.referenceNames">points</stringProp>
-                <stringProp name="JSONPostProcessor.jsonPathExprs">$.content.points</stringProp>
-                <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
-                <stringProp name="JSONPostProcessor.defaultValues">0</stringProp>
-              </JSONPostProcessor>
-              <hashTree/>
-              <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Loop controll" enabled="true">
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="script">def _points_loop = true;
-if (vars.get(&quot;points&quot;).toInteger() == 150){
-	_points_loop = false;
-	AssertionResult.setFailure(false);
-	}
-
-if (vars.get(&quot;current_loop_number&quot;).toInteger() &gt;= vars.get(&quot;max_loops&quot;).toInteger()){
-	_points_loop = false;
-	AssertionResult.setFailureMessage(&quot;Points for the new customer are computing too slow than expected&quot;);
-	AssertionResult.setFailure(true);
-	}
-vars.putObject(&quot;points_loop&quot;, _points_loop);
-log.info(&quot;Current points iteration: ${-&gt; vars.get(&quot;current_loop_number&quot;)}, points loop: ${points_loop}&quot;);</stringProp>
-                <stringProp name="scriptLanguage">groovy</stringProp>
-                <stringProp name="TestPlan.comments">Determines when and with what status loop should be stoped</stringProp>
-              </JSR223Assertion>
-              <hashTree/>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - points ${__jm__DC__idx}" enabled="true">
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/schema-service/document/slug/points</stringProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Points Assertion" enabled="true">
+                  <stringProp name="JSON_PATH">$.content.points</stringProp>
+                  <stringProp name="EXPECTED_VALUE"></stringProp>
+                  <boolProp name="JSONVALIDATION">false</boolProp>
+                  <boolProp name="EXPECT_NULL">false</boolProp>
+                  <boolProp name="INVERT">false</boolProp>
+                  <boolProp name="ISREGEX">false</boolProp>
+                </JSONPathAssertion>
+                <hashTree/>
+                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - points value" enabled="true">
+                  <stringProp name="JSONPostProcessor.referenceNames">points</stringProp>
+                  <stringProp name="JSONPostProcessor.jsonPathExprs">$.content.points</stringProp>
+                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                  <stringProp name="JSONPostProcessor.defaultValues">0</stringProp>
+                </JSONPostProcessor>
+                <hashTree/>
+              </hashTree>
             </hashTree>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - user account personal information" enabled="true">
@@ -973,89 +954,70 @@ vars.putObject(&quot;loop_coupons&quot;, _loop_coupons);</stringProp>
             <boolProp name="IfController.useExpression">true</boolProp>
           </IfController>
           <hashTree>
-            <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller - document points (second iteration)" enabled="true">
-              <stringProp name="WhileController.condition">${second_points_loop}</stringProp>
-              <stringProp name="TestPlan.comments">Second iteration of points assigment after activating coupon.</stringProp>
-            </WhileController>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="SDC" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="TestPlan.comments">Document points loop, second iteration</stringProp>
+              <stringProp name="LoopController.loops">10</stringProp>
+            </LoopController>
             <hashTree>
               <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                 <collectionProp name="Arguments.arguments">
-                  <elementProp name="second_points_loop" elementType="Argument">
-                    <stringProp name="Argument.name">second_points_loop</stringProp>
-                    <stringProp name="Argument.value">true</stringProp>
+                  <elementProp name="second_points" elementType="Argument">
+                    <stringProp name="Argument.name">second_points</stringProp>
+                    <stringProp name="Argument.value">0</stringProp>
                     <stringProp name="Argument.desc">Variable determines if user reaches to the minimum points limit</stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                  <elementProp name="second_max_loops" elementType="Argument">
-                    <stringProp name="Argument.name">second_max_loops</stringProp>
-                    <stringProp name="Argument.value">10</stringProp>
-                    <stringProp name="Argument.desc">Variable determines how many loops can be made until assertion will be treated as failure</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
                   </elementProp>
                 </collectionProp>
               </Arguments>
-              <hashTree/>
-              <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
-                <stringProp name="CounterConfig.start">1</stringProp>
-                <stringProp name="CounterConfig.end">10</stringProp>
-                <stringProp name="CounterConfig.incr">1</stringProp>
-                <stringProp name="CounterConfig.name">current_loop_number</stringProp>
-                <stringProp name="CounterConfig.format"></stringProp>
-                <boolProp name="CounterConfig.per_user">true</boolProp>
-                <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
-              </CounterConfig>
               <hashTree/>
               <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer - delay each request" enabled="true">
                 <stringProp name="TestPlan.comments">Delay each request to gain time to recalculate points</stringProp>
                 <stringProp name="ConstantTimer.delay">500</stringProp>
               </ConstantTimer>
               <hashTree/>
-              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - second iteration points ${current_loop_number}" enabled="true">
-                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-                  <collectionProp name="Arguments.arguments"/>
-                </elementProp>
-                <stringProp name="HTTPSampler.domain"></stringProp>
-                <stringProp name="HTTPSampler.port"></stringProp>
-                <stringProp name="HTTPSampler.protocol"></stringProp>
-                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                <stringProp name="HTTPSampler.path">/schema-service/document/slug/points</stringProp>
-                <stringProp name="HTTPSampler.method">GET</stringProp>
-                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
-              </HTTPSamplerProxy>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+                <stringProp name="IfController.condition">${__groovy(vars.get(&quot;second_points&quot;).toInteger() &lt; 150)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
               <hashTree>
-                <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - points value" enabled="true">
-                  <stringProp name="JSONPostProcessor.referenceNames">points</stringProp>
-                  <stringProp name="JSONPostProcessor.jsonPathExprs">$.content.points</stringProp>
-                  <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
-                  <stringProp name="JSONPostProcessor.defaultValues">0</stringProp>
-                </JSONPostProcessor>
-                <hashTree/>
-                <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
-                  <stringProp name="cacheKey">true</stringProp>
-                  <stringProp name="filename"></stringProp>
-                  <stringProp name="parameters"></stringProp>
-                  <stringProp name="script">def _points_loop = true;
-if (vars.get(&quot;points&quot;).toInteger() == 150){
-	_points_loop = false;
-	AssertionResult.setFailure(false);
-	}
-
-if (vars.get(&quot;current_loop_number&quot;).toInteger() &gt;= vars.get(&quot;second_max_loops&quot;).toInteger()){
-	_points_loop = false;
-	AssertionResult.setFailureMessage(&quot;Points, for the second iteration, are computing too slow than expected&quot;);
-	AssertionResult.setFailure(true);
-	}
-vars.putObject(&quot;second_points_loop&quot;, _points_loop);
-log.info(&quot;Second iteration, current points iteration: ${-&gt; vars.get(&quot;current_loop_number&quot;)}, points loop: ${second_points_loop}&quot;);</stringProp>
-                  <stringProp name="scriptLanguage">groovy</stringProp>
-                </JSR223Assertion>
-                <hashTree/>
+                <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - points ${__jm__SDC__idx}" enabled="true">
+                  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                    <collectionProp name="Arguments.arguments"/>
+                  </elementProp>
+                  <stringProp name="HTTPSampler.domain"></stringProp>
+                  <stringProp name="HTTPSampler.port"></stringProp>
+                  <stringProp name="HTTPSampler.protocol"></stringProp>
+                  <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                  <stringProp name="HTTPSampler.path">/schema-service/document/slug/points</stringProp>
+                  <stringProp name="HTTPSampler.method">GET</stringProp>
+                  <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                  <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                  <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                  <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                  <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                  <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                  <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                </HTTPSamplerProxy>
+                <hashTree>
+                  <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Points Assertion" enabled="true">
+                    <stringProp name="JSON_PATH">$.content.points</stringProp>
+                    <stringProp name="EXPECTED_VALUE"></stringProp>
+                    <boolProp name="JSONVALIDATION">false</boolProp>
+                    <boolProp name="EXPECT_NULL">false</boolProp>
+                    <boolProp name="INVERT">false</boolProp>
+                    <boolProp name="ISREGEX">false</boolProp>
+                  </JSONPathAssertion>
+                  <hashTree/>
+                  <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - points value" enabled="true">
+                    <stringProp name="JSONPostProcessor.referenceNames">second_points</stringProp>
+                    <stringProp name="JSONPostProcessor.jsonPathExprs">$.content.points</stringProp>
+                    <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                    <stringProp name="JSONPostProcessor.defaultValues">0</stringProp>
+                  </JSONPostProcessor>
+                  <hashTree/>
+                </hashTree>
               </hashTree>
             </hashTree>
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - deactivate" enabled="true">
@@ -1099,90 +1061,78 @@ log.info(&quot;Second iteration, current points iteration: ${-&gt; vars.get(&quo
               </ResponseAssertion>
               <hashTree/>
             </hashTree>
-          </hashTree>
-          <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller - document points (third iteration)" enabled="true">
-            <stringProp name="WhileController.condition">${third_points_loop}</stringProp>
-            <stringProp name="TestPlan.comments">Recalculate points after deactivating coupon</stringProp>
-          </WhileController>
-          <hashTree>
-            <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="third_points_loop" elementType="Argument">
-                  <stringProp name="Argument.name">third_points_loop</stringProp>
-                  <stringProp name="Argument.value">true</stringProp>
-                  <stringProp name="Argument.desc">Variable determines if user reaches to the minimum points limit</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-                <elementProp name="third_max_loops" elementType="Argument">
-                  <stringProp name="Argument.name">third_max_loops</stringProp>
-                  <stringProp name="Argument.value">10</stringProp>
-                  <stringProp name="Argument.desc">Variable determines how many loops can be made until assertion will be treated as failure</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
-            </Arguments>
-            <hashTree/>
-            <CounterConfig guiclass="CounterConfigGui" testclass="CounterConfig" testname="Counter" enabled="true">
-              <stringProp name="CounterConfig.start">1</stringProp>
-              <stringProp name="CounterConfig.end">10</stringProp>
-              <stringProp name="CounterConfig.incr">1</stringProp>
-              <stringProp name="CounterConfig.name">current_loop_number</stringProp>
-              <stringProp name="CounterConfig.format"></stringProp>
-              <boolProp name="CounterConfig.per_user">true</boolProp>
-              <boolProp name="CounterConfig.reset_on_tg_iteration">true</boolProp>
-            </CounterConfig>
-            <hashTree/>
-            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer - delay each request" enabled="true">
-              <stringProp name="TestPlan.comments">Delay each request to gain time to recalculate points</stringProp>
-              <stringProp name="ConstantTimer.delay">500</stringProp>
-            </ConstantTimer>
-            <hashTree/>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - third iteration points ${current_loop_number}" enabled="true">
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-                <collectionProp name="Arguments.arguments"/>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain"></stringProp>
-              <stringProp name="HTTPSampler.port"></stringProp>
-              <stringProp name="HTTPSampler.protocol"></stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/schema-service/document/slug/points</stringProp>
-              <stringProp name="HTTPSampler.method">GET</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            </HTTPSamplerProxy>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+              <stringProp name="TestPlan.comments">Run coupon count if deactivation was succesfull</stringProp>
+              <stringProp name="IfController.condition">${JMeterThread.last_sample_ok}</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+            </IfController>
             <hashTree>
-              <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - points value" enabled="true">
-                <stringProp name="JSONPostProcessor.referenceNames">points</stringProp>
-                <stringProp name="JSONPostProcessor.jsonPathExprs">$.content.points</stringProp>
-                <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
-                <stringProp name="JSONPostProcessor.defaultValues">0</stringProp>
-              </JSONPostProcessor>
-              <hashTree/>
-              <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
-                <stringProp name="cacheKey">true</stringProp>
-                <stringProp name="filename"></stringProp>
-                <stringProp name="parameters"></stringProp>
-                <stringProp name="script">def _points_loop = true;
-if (vars.get(&quot;points&quot;).toInteger() == 150){
-	_points_loop = false;
-	AssertionResult.setFailure(false);
-	}
-
-if (vars.get(&quot;current_loop_number&quot;).toInteger() &gt;= vars.get(&quot;third_max_loops&quot;).toInteger()){
-	_points_loop = false;
-	AssertionResult.setFailureMessage(&quot;Points, for the third iteration, are computing too slow than expected&quot;);
-	AssertionResult.setFailure(true);
-	}
-vars.putObject(&quot;third_points_loop&quot;, _points_loop);
-log.info(&quot;Third iteration, current points iteration: ${-&gt; vars.get(&quot;current_loop_number&quot;)}, points loop: ${third_points_loop}&quot;);</stringProp>
-                <stringProp name="scriptLanguage">groovy</stringProp>
-              </JSR223Assertion>
-              <hashTree/>
+              <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="TDC" enabled="true">
+                <boolProp name="LoopController.continue_forever">true</boolProp>
+                <stringProp name="TestPlan.comments">Document points loop, third iterration</stringProp>
+                <stringProp name="LoopController.loops">10</stringProp>
+              </LoopController>
+              <hashTree>
+                <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="third_points" elementType="Argument">
+                      <stringProp name="Argument.name">third_points</stringProp>
+                      <stringProp name="Argument.value">0</stringProp>
+                      <stringProp name="Argument.desc">Variable determines if user reaches to the minimum points limit</stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </Arguments>
+                <hashTree/>
+                <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer - delay each request" enabled="true">
+                  <stringProp name="TestPlan.comments">Delay each request to gain time to recalculate points</stringProp>
+                  <stringProp name="ConstantTimer.delay">500</stringProp>
+                </ConstantTimer>
+                <hashTree/>
+                <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If Controller" enabled="true">
+                  <stringProp name="IfController.condition">${__groovy(vars.get(&quot;third_points&quot;).toInteger() &lt; 150)}</stringProp>
+                  <boolProp name="IfController.evaluateAll">false</boolProp>
+                  <boolProp name="IfController.useExpression">true</boolProp>
+                </IfController>
+                <hashTree>
+                  <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - points ${__jm__TDC__idx}" enabled="true">
+                    <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                      <collectionProp name="Arguments.arguments"/>
+                    </elementProp>
+                    <stringProp name="HTTPSampler.domain"></stringProp>
+                    <stringProp name="HTTPSampler.port"></stringProp>
+                    <stringProp name="HTTPSampler.protocol"></stringProp>
+                    <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                    <stringProp name="HTTPSampler.path">/schema-service/document/slug/points</stringProp>
+                    <stringProp name="HTTPSampler.method">GET</stringProp>
+                    <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                    <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                    <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                    <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                    <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                    <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                    <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                  </HTTPSamplerProxy>
+                  <hashTree>
+                    <JSONPathAssertion guiclass="JSONPathAssertionGui" testclass="JSONPathAssertion" testname="Points Assertion" enabled="true">
+                      <stringProp name="JSON_PATH">$.content.points</stringProp>
+                      <stringProp name="EXPECTED_VALUE"></stringProp>
+                      <boolProp name="JSONVALIDATION">false</boolProp>
+                      <boolProp name="EXPECT_NULL">false</boolProp>
+                      <boolProp name="INVERT">false</boolProp>
+                      <boolProp name="ISREGEX">false</boolProp>
+                    </JSONPathAssertion>
+                    <hashTree/>
+                    <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor - points value" enabled="true">
+                      <stringProp name="JSONPostProcessor.referenceNames">third_points</stringProp>
+                      <stringProp name="JSONPostProcessor.jsonPathExprs">$.content.points</stringProp>
+                      <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+                      <stringProp name="JSONPostProcessor.defaultValues">0</stringProp>
+                    </JSONPostProcessor>
+                    <hashTree/>
+                  </hashTree>
+                </hashTree>
+              </hashTree>
             </hashTree>
           </hashTree>
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request - change password" enabled="true">

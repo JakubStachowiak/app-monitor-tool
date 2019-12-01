@@ -11,7 +11,5 @@ services:
     network_mode: host
     volumes:
       - ./:/jmeter
-      #- ./zabka_users.csv:/jmeter/zabka_users.csv
-      #- ./test.jmx:/jmeter/test.jmx
     command: --nongui --testfile api_test.jmx -j jmeter.log
     working_dir: /jmeter

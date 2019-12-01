@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  jmeter:
+    image: egaillardon/jmeter-plugins
+    container_name: zabka-jmeter
+    environment:
+      users_csv_path: /jmeter/test_users.csv
+      device_id: ab759743dbc64abc
+      ELASTICSEARCH_HOST: 172.20.19.4
+      ELASTICSEARCH_PORT: 9200
+    network_mode: host
+    volumes:
+      - ./:/jmeter
+    command: --nongui --testfile api_test.jmx -j jmeter.log
+    working_dir: /jmeter

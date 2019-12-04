@@ -89,7 +89,7 @@
         {
           "bucketAggs": [
             {
-              "field": "Timestamp",
+              "field": "SampleStartTime",
               "id": "2",
               "settings": {
                 "interval": "auto",
@@ -110,7 +110,7 @@
           ],
           "query": "SampleLabel.keyword:$filters",
           "refId": "A",
-          "timeField": "Timestamp"
+          "timeField": "SampleStartTime"
         }
       ],
       "thresholds": "0.02,0.1",
@@ -191,7 +191,7 @@
         {
           "bucketAggs": [
             {
-              "field": "Timestamp",
+              "field": "SampleStartTime",
               "id": "2",
               "settings": {
                 "interval": "10s",
@@ -217,7 +217,7 @@
           ],
           "query": "SampleLabel.keyword:$filters",
           "refId": "A",
-          "timeField": "Timestamp"
+          "timeField": "SampleStartTime"
         }
       ],
       "thresholds": "",
@@ -506,6 +506,135 @@
     },
     {
       "aliasColors": {},
+      "bars": true,
+      "cacheTimeout": null,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": null,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 15
+      },
+      "hiddenSeries": false,
+      "id": 20,
+      "interval": "1m",
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "sort": "avg",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": false,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pluginVersion": "6.5.1",
+      "pointradius": 2,
+      "points": true,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "bucketAggs": [
+            {
+              "fake": true,
+              "field": "SampleLabel.keyword",
+              "id": "3",
+              "settings": {
+                "min_doc_count": 1,
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "SampleStartTime",
+              "id": "2",
+              "settings": {
+                "interval": "auto",
+                "min_doc_count": 0,
+                "trimEdges": 0
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "metrics": [
+            {
+              "field": "ResponseCode",
+              "id": "1",
+              "meta": {},
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "query": "ResponseCode:* && SampleLabel.keyword:$filters",
+          "refId": "A",
+          "timeField": "SampleStartTime"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "ResponseCode",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "ResponseCode",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
       "bars": false,
       "cacheTimeout": null,
       "dashLength": 10,
@@ -517,7 +646,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 24
       },
       "hiddenSeries": false,
       "id": 18,
@@ -663,7 +792,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 25
+        "y": 34
       },
       "hiddenSeries": false,
       "id": 3,
@@ -927,7 +1056,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 33
+        "y": 42
       },
       "hiddenSeries": false,
       "id": 8,
@@ -1176,7 +1305,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 39
+        "y": 48
       },
       "id": 2,
       "links": [],
@@ -1504,7 +1633,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 47
+        "y": 56
       },
       "id": 10,
       "links": [
@@ -1560,7 +1689,7 @@
           ],
           "query": "SampleLabel.keyword:$filters && ErrorCount:1",
           "refId": "A",
-          "timeField": "Timestamp"
+          "timeField": "SampleStartTime"
         }
       ],
       "title": "Errors",
@@ -1580,7 +1709,7 @@
         "h": 8,
         "w": 24,
         "x": 0,
-        "y": 56
+        "y": 65
       },
       "hiddenSeries": false,
       "id": 1,
@@ -1844,5 +1973,5 @@
   "timezone": "browser",
   "title": "Żabka App Monitor",
   "uid": "APfxHSzmk",
-  "version": 7
+  "version": 9
 }

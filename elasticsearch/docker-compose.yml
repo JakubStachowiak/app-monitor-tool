@@ -1,0 +1,42 @@
+version: "3.7"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
+    container_name: zabka-es-1
+    environment:
+      - cluster.name=zabka-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.seed_hosts=zabka-es-1
+      - node.name=zabka-es-1
+      - cluster.initial_master_nodes=zabka-es-1
+      - TZ=Europe/Warsaw
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /opt/elk/es_data:/usr/share/elasticsearch/data
+    network_mode: host
+
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.4.2
+    container_name: zabka-kibana
+    network_mode: host
+    environment:
+      - SERVER_NAME=kibana
+      - XPACK_MONITORING_ENABLED=true
+      - ELASTICSEARCH_HOSTS=http://127.0.0.1:9200
+      - TZ=Europe/Warsaw
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.4.2
+    container_name: zabka-logstash
+    network_mode: host
+    environment:
+      HTTP_HOST: 0.0.0.0
+      XPACK_MONITORING_ELASTICSEARCH_HOSTS: localhost:9200
+      TZ: Europe/Warsaw
+    volumes:
+      - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro

@@ -1,0 +1,11 @@
+/client/anonymous
+/v4/clients/registered
+/v4/auth/login/client
+/schema-service/document/slug/points
+/v4/my-account/personal-information
+/schema-service/document/slug/dashboard
+/schema-service/document/slug/view-sniadanie
+/schema-service/proxy/promotions
+/v4/promotions/promotion/batch-activate
+/v4/promotions/promotion/batch-deactivate
+/v4/my-account/change-password

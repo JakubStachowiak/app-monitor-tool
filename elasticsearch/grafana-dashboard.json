@@ -521,13 +521,14 @@
       },
       "hiddenSeries": false,
       "id": 18,
+      "interval": "1m",
       "legend": {
         "alignAsTable": true,
         "avg": true,
-        "current": false,
+        "current": true,
         "hideEmpty": false,
         "hideZero": false,
-        "max": true,
+        "max": false,
         "min": false,
         "rightSide": true,
         "show": true,
@@ -563,7 +564,7 @@
                 "min_doc_count": 1,
                 "order": "desc",
                 "orderBy": "_term",
-                "size": "5"
+                "size": "0"
               },
               "type": "terms"
             },
@@ -587,7 +588,7 @@
               "type": "avg"
             }
           ],
-          "query": "ResponseTime:* and SampleLabel.keyword:$filters and ErrorCount:$error",
+          "query": "ResponseTime:*",
           "refId": "A",
           "timeField": "SampleStartTime"
         }
@@ -1576,13 +1577,14 @@
       "fill": 0,
       "fillGradient": 0,
       "gridPos": {
-        "h": 9,
-        "w": 12,
+        "h": 8,
+        "w": 24,
         "x": 0,
         "y": 56
       },
       "hiddenSeries": false,
       "id": 1,
+      "interval": "1m",
       "legend": {
         "alignAsTable": true,
         "avg": true,
@@ -1593,6 +1595,8 @@
         "min": false,
         "rightSide": true,
         "show": true,
+        "sort": "avg",
+        "sortDesc": true,
         "total": false,
         "values": true
       },
@@ -1629,7 +1633,7 @@
                 "min_doc_count": 1,
                 "order": "desc",
                 "orderBy": "_term",
-                "size": "5"
+                "size": "0"
               },
               "type": "terms"
             },
@@ -1840,5 +1844,5 @@
   "timezone": "browser",
   "title": "Żabka App Monitor",
   "uid": "APfxHSzmk",
-  "version": 6
+  "version": 7
 }

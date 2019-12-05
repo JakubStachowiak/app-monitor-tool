@@ -3,6 +3,7 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.4.2
     container_name: zabka-es-1
+    restart: always
     environment:
       - cluster.name=zabka-cluster
       - bootstrap.memory_lock=true
@@ -23,6 +24,7 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana:7.4.2
     container_name: zabka-kibana
+    restart: always
     network_mode: host
     environment:
       - SERVER_NAME=kibana
@@ -33,6 +35,7 @@ services:
   logstash:
     image: docker.elastic.co/logstash/logstash:7.4.2
     container_name: zabka-logstash
+    restart: always
     network_mode: host
     environment:
       HTTP_HOST: 0.0.0.0
@@ -40,3 +43,15 @@ services:
       TZ: Europe/Warsaw
     volumes:
       - ./logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
+
+  grafana:
+    image: grafana/grafana
+    restart: always
+    container_name: zabka-grafana
+    hostname: grafana.zabka.app
+    network_mode: host
+    environment:
+      TZ: Europe/Warsaw
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./grafana:/var/lib/grafana

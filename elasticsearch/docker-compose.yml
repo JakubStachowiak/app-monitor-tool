@@ -54,4 +54,4 @@ services:
       TZ: Europe/Warsaw
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ./grafana:/var/lib/grafana
+      - /opt/elk/grafana:/var/lib/grafana

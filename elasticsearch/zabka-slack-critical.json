@@ -1,0 +1,91 @@
+PUT _watcher/watch/zabka-slack-critical
+{
+    "trigger": {
+        "schedule": {
+            "interval": "1m"
+        }
+    },
+    "input": {
+        "search": {
+            "request": {
+                "search_type": "query_then_fetch",
+                "indices": [
+                    "zabka-app-monitor-*"
+                ],
+                "rest_total_hits_as_int": true,
+                "body": {
+                    "size": 0,
+                    "query": {
+                        "bool": {
+                            "filter": {
+                                "range": {
+                                    "SampleStartTime": {
+                                        "gte": "{{ctx.trigger.scheduled_time}}||-5m",
+                                        "lte": "{{ctx.trigger.scheduled_time}}",
+                                        "format": "strict_date_optional_time||epoch_millis"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "aggs": {
+                        "bucketAgg": {
+                            "terms": {
+                                "field": "SampleLabel.keyword",
+                                "size": 5,
+                                "order": {
+                                    "metricAgg": "desc"
+                                }
+                            },
+                            "aggs": {
+                                "metricAgg": {
+                                    "avg": {
+                                        "field": "ResponseTime"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "condition": {
+        "script": {
+            "source": "ArrayList arr = ctx.payload.aggregations.bucketAgg.buckets; for (int i = 0; i < arr.length; i++) { if (arr[i]['metricAgg'].value > params.threshold) { return true; } } return false;",
+            "lang": "painless",
+            "params": {
+                "threshold": 2000
+            }
+        }
+    },
+    "transform": {
+        "script": {
+            "source": "HashMap result = new HashMap(); ArrayList arr = ctx.payload.aggregations.bucketAgg.buckets; ArrayList filteredHits = new ArrayList(); for (int i = 0; i < arr.length; i++) { HashMap filteredHit = new HashMap(); filteredHit.key = arr[i].key; filteredHit.value = arr[i]['metricAgg'].value; if (filteredHit.value > params.threshold) { filteredHits.add(filteredHit); } } result.results = filteredHits; return result;",
+            "lang": "painless",
+            "params": {
+                "threshold": 2000
+            }
+        }
+    },
+    "actions": {
+        "slack_1": {
+            "slack": {
+                "message": {
+                    "to": [
+                        "@stefan"
+                    ],
+                    "text": ":red_circle: *2 seconds* :red_circle: `ResponseTime` breached :exclamation:",
+                    "dynamic_attachments": {
+                        "list_path": "ctx.payload.results",
+                        "attachment_template": {
+                            "title": "{{key}}",
+                            "text": "ResponseTime: {{value}}ms",
+                            "color": "#f03400"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

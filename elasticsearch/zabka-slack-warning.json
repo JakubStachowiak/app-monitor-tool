@@ -73,7 +73,7 @@ PUT _watcher/watch/zabka-slack-warning
             "slack": {
                 "message": {
                     "to": [
-                        "@stefan"
+                        "@Jakub Stachowiak"
                     ],
                     "text": "1 second `ResponseTime` breached :exclamation:",
                     "dynamic_attachments": {

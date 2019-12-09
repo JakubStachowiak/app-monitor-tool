@@ -73,7 +73,7 @@ PUT _watcher/watch/zabka-slack-critical
             "slack": {
                 "message": {
                     "to": [
-                        "@stefan"
+                        "@Jakub Stachowiak"
                     ],
                     "text": ":red_circle: *2 seconds* :red_circle: `ResponseTime` breached :exclamation:",
                     "dynamic_attachments": {

@@ -1144,7 +1144,7 @@ vars.putObject(&quot;loop_coupons&quot;, _loop_coupons);</stringProp>
                   <stringProp name="Argument.value">{&#xd;
 	&quot;deviceId&quot;: &quot;${DEVICE_ID}&quot;,&#xd;
 	&quot;oldPassword&quot;: &quot;${user_password}&quot;,&#xd;
-	&quot;newPassword&quot;: &quot;${new_password}&quot;&#xd;
+	&quot;password&quot;: &quot;${new_password}&quot;&#xd;
 	}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                 </elementProp>
